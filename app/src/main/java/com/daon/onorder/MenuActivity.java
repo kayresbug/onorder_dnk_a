@@ -840,7 +840,7 @@ public class MenuActivity extends AppCompatActivity{
         }
         if (order_list.size() > 0) {
 //            sendFCM(order);
-            sendFirebaseOrder(order, cardname);
+            sendFirebaseOrder(order, "");
         }else{
             isOrder = false;
         }
@@ -853,7 +853,12 @@ public class MenuActivity extends AppCompatActivity{
 
         String time = format.format(calendar.getTime());
         String time2 = format2.format(calendar.getTime());
-        PrintOrderModel printOrderModel = new PrintOrderModel(pref.getString("table", "")+"번 주문", order, time, "x", "order", cardname, prevCardNo,prevAuthDate,prevAuthNum,company,company,vanTr,String.valueOf(all_price));
+        PrintOrderModel printOrderModel;
+        if (cardname.equals("")) {
+            printOrderModel = new PrintOrderModel(pref.getString("table", "") + "번 주문", order, time, "x", "order", "","","","","","","", String.valueOf(all_price));
+        }else {
+            printOrderModel = new PrintOrderModel(pref.getString("table", "") + "번 주문", order, time, "x", "order", cardname, prevCardNo, prevAuthDate, prevAuthNum, company, company, vanTr, String.valueOf(all_price));
+        }
 
         myRef.child(pref.getString("storename", "")).child(time2).push().setValue(printOrderModel).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
