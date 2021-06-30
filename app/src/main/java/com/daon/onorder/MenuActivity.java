@@ -998,79 +998,80 @@ public class MenuActivity extends AppCompatActivity{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (m_hash != null) {
-                prevAuthNum = m_hash.get("AuthNum");
-                prevAuthDate = m_hash.get("Authdate");
-                prevClassfication = m_hash.get("Classification");
-                cardname = m_hash.get("CardName");
-                company = m_hash.get("PurchaseName");
-                vanTr = m_hash.get("VanTr");
-                prevCardNo = m_hash.get("CardNo");
+            if (m_hash.get("VanTr") == null){
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://15.164.232.164:5000/")
+                        .addConverterFactory(new NullOnEmptyConverterFactory())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                InterfaceApi interfaceApi = retrofit.create(InterfaceApi.class);
+                interfaceApi.payment(pref.getString("storecode", ""), m_hash.get("Classification"), m_hash.get("TelegramType"), m_hash.get("Dpt_Id"), m_hash.get("Enterprise_Info"), m_hash.get("Full_Text_Num"),
+                        m_hash.get("Status"), m_hash.get("Authdate"), m_hash.get("Message1"), m_hash.get("Message2"), m_hash.get("AuthNum"), m_hash.get("FranchiseID"),
+                        m_hash.get("IssueCode"), m_hash.get("CardName"), m_hash.get("PurchaseCode"), m_hash.get("PurchaseName"), m_hash.get("Remain"),
+                        m_hash.get("point1"), m_hash.get("point2"), m_hash.get("point3"), m_hash.get("notice1"), m_hash.get("notice2"), m_hash.get("CardType"),
+                        m_hash.get("CardNo"), m_hash.get("SWModelNum"), m_hash.get("ReaderModelNum"), m_hash.get("VanTr"), m_hash.get("Cardbin"), String.valueOf(all_price)).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("daon", "isSuccessful = " + response.isSuccessful());
+//                        appendLog("isSuccessful = " + response.isSuccessful());
+                        if (response.isSuccessful()) {
+                        }
+                    }
 
-                //KTC 인증용 출력
-                Log.d("payment", "recv [Classification]:: " + (m_hash.get("Classification")));
-                System.out.println("recv [TelegramType]:: " + (m_hash.get("TelegramType")));
-                System.out.println("recv [Dpt_Id]:: " + (m_hash.get("Dpt_Id")));
-                System.out.println("recv [Enterprise_Info]:: " + (m_hash.get("Enterprise_Info")));
-                System.out.println("recv [Full_Text_Num]:: " + (m_hash.get("Full_Text_Num")));
-                System.out.println("recv [Status]:: " + (m_hash.get("Status")));
-                System.out.println("recv [CardType]:: " + (m_hash.get("CardType")));              //'N':신용카드 'G':기프트카드 'C':체크카드 'P'선불카드 'P'고운맘 바우처
-                System.out.println("recv [Authdate]:: " + (m_hash.get("Authdate")));
-                System.out.println("recv [Message1]:: " + (m_hash.get("Message1")));
-                System.out.println("recv [Message2]:: " + (m_hash.get("Message2")));
-                System.out.println("recv [VanTr]:: " + (m_hash.get("VanTr")));
-                System.out.println("recv [AuthNum]:: " + (m_hash.get("AuthNum")));
-                System.out.println("recv [FranchiseID]:: " + (m_hash.get("FranchiseID")));
-                System.out.println("recv [IssueCode]:: " + (m_hash.get("IssueCode")));
-                System.out.println("recv [CardName]:: " + (m_hash.get("CardName")));
-                System.out.println("recv [PurchaseCode]:: " + (m_hash.get("PurchaseCode")));
-                System.out.println("recv [PurchaseName]:: " + (m_hash.get("PurchaseName")));
-                System.out.println("recv [Remain]:: " + (m_hash.get("Remain")));
-                System.out.println("recv [point1]:: " + (m_hash.get("point1")));
-                System.out.println("recv [point2]:: " + (m_hash.get("point2")));
-                System.out.println("recv [point3]:: " + (m_hash.get("point3")));
-                System.out.println("recv [notice1]:: " + (m_hash.get("notice1")));
-                System.out.println("recv [notice2]:: " + (m_hash.get("notice2")));
-                System.out.println("recv [CardNo]:: " + (m_hash.get("CardNo")));
-            }
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+//                        appendLog(t.getMessage());
+                    }
+                });
+                Toast.makeText(this, m_hash.get("Message1"), Toast.LENGTH_LONG).show();
 
-            Toast.makeText(this, "성공" + (m_hash.get("AuthNum")), Toast.LENGTH_LONG).show();
+            }else {
+                if (m_hash != null) {
+                    prevAuthNum = m_hash.get("AuthNum");
+                    prevAuthDate = m_hash.get("Authdate");
+                    prevClassfication = m_hash.get("Classification");
+                    cardname = m_hash.get("CardName");
+                    company = m_hash.get("PurchaseName");
+                    vanTr = m_hash.get("VanTr");
+                    prevCardNo = m_hash.get("CardNo");
+                }
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://15.164.232.164:5000/")
-                    .addConverterFactory(new NullOnEmptyConverterFactory())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            InterfaceApi interfaceApi = retrofit.create(InterfaceApi.class);
-            interfaceApi.payment(pref.getString("storecode", ""), m_hash.get("Classification"), m_hash.get("TelegramType"), m_hash.get("Dpt_Id"), m_hash.get("Enterprise_Info"), m_hash.get("Full_Text_Num"),
-                    m_hash.get("Status"), m_hash.get("Authdate"), m_hash.get("Message1"), m_hash.get("Message2"), m_hash.get("AuthNum"), m_hash.get("FranchiseID"),
-                    m_hash.get("IssueCode"), m_hash.get("CardName"), m_hash.get("PurchaseCode"), m_hash.get("PurchaseName"), m_hash.get("Remain"),
-                    m_hash.get("point1"), m_hash.get("point2"), m_hash.get("point3"), m_hash.get("notice1"), m_hash.get("notice2"), m_hash.get("CardType"),
-                    m_hash.get("CardNo"), m_hash.get("SWModelNum"), m_hash.get("ReaderModelNum"), m_hash.get("VanTr"), m_hash.get("Cardbin"), String.valueOf(all_price)).enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    Log.d("daon", "isSuccessful = "+response.isSuccessful());
-                    if (response.isSuccessful()) {
-                        sendOrder();
-                        prevAuthNum = m_hash.get("AuthNum");
-                        prevAuthDate = m_hash.get("Authdate");
-                        removePrice = String.valueOf(all_price);
-                        orderAdapter.removeData();
-                        all_price = 0;
-                        order_price.setText("총 0원 주문하기");
-                        isOrder = false;
-
-
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://15.164.232.164:5000/")
+                        .addConverterFactory(new NullOnEmptyConverterFactory())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                InterfaceApi interfaceApi = retrofit.create(InterfaceApi.class);
+                interfaceApi.payment(pref.getString("storecode", ""), m_hash.get("Classification"), m_hash.get("TelegramType"), m_hash.get("Dpt_Id"), m_hash.get("Enterprise_Info"), m_hash.get("Full_Text_Num"),
+                        m_hash.get("Status"), m_hash.get("Authdate"), m_hash.get("Message1"), m_hash.get("Message2"), m_hash.get("AuthNum"), m_hash.get("FranchiseID"),
+                        m_hash.get("IssueCode"), m_hash.get("CardName"), m_hash.get("PurchaseCode"), m_hash.get("PurchaseName"), m_hash.get("Remain"),
+                        m_hash.get("point1"), m_hash.get("point2"), m_hash.get("point3"), m_hash.get("notice1"), m_hash.get("notice2"), m_hash.get("CardType"),
+                        m_hash.get("CardNo"), m_hash.get("SWModelNum"), m_hash.get("ReaderModelNum"), m_hash.get("VanTr"), m_hash.get("Cardbin"), String.valueOf(all_price)).enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        Log.d("daon", "isSuccessful = " + response.isSuccessful());
+//                        appendLog("isSuccessful = " + response.isSuccessful());
+                        if (response.isSuccessful()) {
+                            sendOrder();
+                            prevAuthNum = m_hash.get("AuthNum");
+                            prevAuthDate = m_hash.get("Authdate");
+                            removePrice = String.valueOf(all_price);
+                            orderAdapter.removeData();
+                            all_price = 0;
+                            order_price.setText("총 0원 주문하기");
+                            isOrder = false;
+                        }
 
                     }
 
-                }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        t.printStackTrace();
+//                        appendLog(t.getMessage());
+                    }
+                });
+            }
 
 
         } else if (resultCode == RESULT_FIRST_USER && data != null) {
